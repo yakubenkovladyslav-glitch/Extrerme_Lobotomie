@@ -1,51 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 body {
-  background-color: black;
-  color: white;
-  font-family: Arial, sans-serif;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  background: linear-gradient(135deg, #000000 0%, #111111 100%);
+  color: white;
+  font-family: 'Press Start 2P', cursive;
 }
 
 .container {
   display: flex;
+  height: 100vh;
+}
+
+/* Menu à gauche */
+.menu {
+  width: 220px;
+  background-color: #111;
+  display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-h1 {
+.menu h1 {
   color: #00ff99;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  text-shadow: 0 0 10px #00ff99;
 }
 
-button {
-  padding: 15px 30px;
-  font-size: 20px;
-  cursor: pointer;
-  background-color: #111;
+.menu button {
+  padding: 12px 25px;
+  font-size: 16px;
+  margin-bottom: 12px;
+  background-color: #222;
   color: #00ffcc;
   border: 2px solid #00ffcc;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-shadow: 0 0 5px #00ffcc;
+  transition: all 0.2s ease;
 }
 
-button:hover {
+.menu button:hover {
   background-color: #00ffcc;
   color: black;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
 }
 
+/* Zone du jeu à droite */
 #game-container {
-  width: 800px;
-  height: 600px;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
 }
 
 #game-frame {
-  width: 100%;
-  height: 100%;
-  border: 2px solid #00ffcc;
-  border-radius: 10px;
-  background-color: black;
+  width: 80%;
+  height: 80%;
+  border: 4px solid #00ffcc;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #00ffcc;
 }
