@@ -1,10 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 body {
-  margin: 0;
-  background: linear-gradient(135deg, #000000 0%, #111111 100%);
+  background-color: black;
   color: white;
-  font-family: 'Press Start 2P', cursive;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
 .container {
@@ -14,7 +12,7 @@ body {
 
 /* Menu à gauche */
 .menu {
-  width: 220px;
+  width: 200px;
   background-color: #111;
   display: flex;
   flex-direction: column;
@@ -25,28 +23,23 @@ body {
 
 .menu h1 {
   color: #00ff99;
-  margin-bottom: 30px;
-  text-shadow: 0 0 10px #00ff99;
+  margin-bottom: 20px;
 }
 
 .menu button {
-  padding: 12px 25px;
-  font-size: 16px;
-  margin-bottom: 12px;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
   background-color: #222;
   color: #00ffcc;
   border: 2px solid #00ffcc;
   border-radius: 5px;
-  cursor: pointer;
-  text-shadow: 0 0 5px #00ffcc;
-  transition: all 0.2s ease;
+  margin-bottom: 10px;
 }
 
 .menu button:hover {
   background-color: #00ffcc;
   color: black;
-  transform: scale(1.05);
-  box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
 }
 
 /* Zone du jeu à droite */
@@ -55,13 +48,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000;
 }
 
 #game-frame {
   width: 80%;
   height: 80%;
-  border: 4px solid #00ffcc;
-  border-radius: 15px;
-  box-shadow: 0 0 20px #00ffcc;
+  border: 2px solid #00ffcc;
+  border-radius: 5px;
+  background-color: black;
 }
