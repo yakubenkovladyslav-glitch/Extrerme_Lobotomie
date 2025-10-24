@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎮 Mon Site de Jeux</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Mon Site de Jeux</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Menu à gauche -->
-    <div class="menu">
-      <h1>GAMES</h1>
-      <button onclick="openGame('games/snake.html')">🐍 Snake</button>
-      <button onclick="openGame('#')">🖱️ Clicker</button>
-      <button onclick="openGame('#')">🕹️ GD</button>
-      <button onclick="openGame('#')">✨ Autres Features</button>
-      <button onclick="openGame('#')">...</button>
-    </div>
-
-    <!-- Zone du jeu à droite -->
-    <div id="game-container">
-      <iframe id="game-frame" src="" frameborder="0"></iframe>
-    </div>
+<div class="container">
+  <!-- Menu à gauche -->
+  <div class="menu">
+    <h1>GAMES</h1>
+    <button onclick="openGame('games/snake.html')">🐍 Snake</button>
+    <button onclick="openGame('games/flappy-bird.html')">🐦 Flappy Bird</button>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Zone du jeu à droite -->
+  <div id="game-container">
+    <iframe id="game-frame" src="" frameborder="0"></iframe>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
