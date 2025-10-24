@@ -1,12 +1,10 @@
 function openGame(url) {
-  if(url === '#') {
-    alert("Ce jeu n'est pas encore disponible !");
-    return;
-  }
-
-  const iframe = document.getElementById("game-frame");
-  const gameContainer = document.getElementById("game-container");
-
-  iframe.src = url;
-  gameContainer.style.display = "flex";
+  const frame = document.getElementById('game-frame');
+  frame.src = url;
 }
+
+window.addEventListener("message", (event) => {
+  if (event.data === "closeGame") {
+    document.getElementById('game-frame').src = "";
+  }
+});
