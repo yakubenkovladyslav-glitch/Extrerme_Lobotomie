@@ -1,0 +1,16 @@
+/* Style spécifique à Flappy Bird */
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+.game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+canvas {
+    border: 5px solid #ff1a1a;  /* Bordure néon rouge */
+}
