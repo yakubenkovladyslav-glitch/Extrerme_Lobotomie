@@ -1,26 +1,44 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 Mon Site de Jeux</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 Mon Site de Jeux</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-  <!-- Menu à gauche -->
-  <div class="menu">
-    <h1>GAMES</h1>
-    <button onclick="openGame('games/snake.html')">🐍 Snake</button>
-    <button onclick="openGame('games/flappy-bird.html')">🐦 Flappy Bird</button>
+  <div class="container">
+    <!-- Menu à gauche -->
+    <div class="menu">
+      <h1>GAMES</h1>
+      <button onclick="openGame('games/snake.html')">🐍 Snake</button>
+      <button onclick="openGame('games/flappy-bird.html')">🐦 Flappy Bird</button>
+      <button onclick="openGame('games/geometry-dash.html')">🟦 Geometry Dash Lite</button>
+    </div>
+
+    <!-- Zone du jeu à droite -->
+    <div id="game-container">
+      <iframe id="game-frame" src="" frameborder="0"></iframe>
+    </div>
   </div>
 
-  <!-- Zone du jeu à droite -->
-  <div id="game-container">
-    <iframe id="game-frame" src="" frameborder="0"></iframe>
-  </div>
-</div>
+  <script>
+    function openGame(url) {
+      const frame = document.getElementById('game-frame');
+      frame.src = url;
 
-<script src="script.js"></script>
+      // Donne automatiquement le focus à l’iframe (pour capter les touches)
+      frame.onload = function() {
+        frame.contentWindow.focus();
+      };
+    }
+
+    // Permet aux jeux d’envoyer "closeGame" pour revenir au menu
+    window.addEventListener("message", (event) => {
+      if (event.data === "closeGame") {
+        document.getElementById('game-frame').src = "";
+      }
+    });
+  </script>
 </body>
 </html>

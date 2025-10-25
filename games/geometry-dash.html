@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry Dash Lite</title>
+<style>
+body {
+  background-color: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  overflow: hidden;
+}
+
+#close-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 24px;
+  background: none;
+  color: red;
+  border: none;
+  cursor: pointer;
+}
+
+#start-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  padding: 15px 40px;
+  background-color: #111;
+  color: #00ffcc;
+  border: 2px solid #00ffcc;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#start-btn:hover {
+  background-color: #00ffcc;
+  color: black;
+}
+
+canvas {
+  display: none;
+  background-color: #111;
+  border: 2px solid #00ffcc;
+  border-radius: 10px;
+  margin-top: 60px;
+}
+</style>
+</head>
+<body>
+<button id="close-btn" onclick="window.parent.postMessage('closeGame', '*')">❌</button>
+<button id="start-btn">Start</button>
+<canvas id="gameCanvas" width="800" height="400"></canvas>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const startBtn = document.getElementById("start-btn");
+
+let player, obstacles, score, gravity, jumpStrength, isJumping, velocityY, gameSpeed, spawnTimer, running;
+
+function init() {
+  player = { x: 100, y: 360, size: 40 };
+  obstacles = [];
+  score = 0;
+  gravity = 0.8;
+  jumpStrength = 15;
+  isJumping = false;
+  velocityY = 0;
+  gameSpeed = 6;
+  spawnTimer = 0;
+  running = true;
+}
+
+function spawnObstacle() {
+  const height = 60;
+  obstacles.push({ x: canvas.width, y: canvas.height - height, width: 20, height });
+}
+
+function update() {
+  if (!running) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Player
+  velocityY += gravity;
+  player.y += velocityY;
+
+  if (player.y > 360) {
+    player.y = 360;
+    velocityY = 0;
+    isJumping = false;
+  }
+
+  ctx.fillStyle = "#00ccff";
+  ctx.fillRect(player.x, player.y, player.size, player.size);
+
+  // Obstacles
+  spawnTimer++;
+  if (spawnTimer > 90) {
+    spawnObstacle();
+    spawnTimer = 0;
+  }
+
+  ctx.fillStyle = "red";
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    const obs = obstacles[i];
+    obs.x -= gameSpeed;
+
+    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+
+    // Collision
+    if (
+      player.x < obs.x + obs.width &&
+      player.x + player.size > obs.x &&
+      player.y + player.size > obs.y
+    ) {
+      endGame();
+      return;
+    }
+
+    if (obs.x + obs.width < 0) {
+      obstacles.splice(i, 1);
+      score++;
+    }
+  }
+
+  // Score
+  ctx.fillStyle = "white";
+  ctx.font = "20px Arial";
+  ctx.fillText("Score: " + score, 10, 30);
+
+  requestAnimationFrame(update);
+}
+
+function endGame() {
+  running = false;
+  ctx.fillStyle = "white";
+  ctx.font = "40px Arial";
+  ctx.fillText("💥 Game Over", canvas.width / 2 - 100, canvas.height / 2);
+  setTimeout(() => {
+    startBtn.style.display = "block";
+    canvas.style.display = "none";
+  }, 1500);
+}
+
+document.addEventListener("keydown", (e) => {
+  if ((e.code === "Space" || e.key === "w") && !isJumping && running) {
+    velocityY = -jumpStrength;
+    isJumping = true;
+  }
+});
+
+startBtn.addEventListener("click", () => {
+  startBtn.style.display = "none";
+  canvas.style.display = "block";
+  init();
+  update();
+});
+</script>
+</body>
+</html>
+
