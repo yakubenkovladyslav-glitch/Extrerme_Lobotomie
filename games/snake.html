@@ -1,197 +1,108 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snake</title>
-<link rel="stylesheet" href="../style.css">
-<style>
-body {
-  background-color: black;
-  color: white;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  position: relative;
-}
-
-#startBtn {
-  padding: 20px 40px;
-  font-size: 30px;
-  cursor: pointer;
-  color: #00ffcc;
-  background-color: #222;
-  border: 2px solid #00ffcc;
-  border-radius: 10px;
-}
-
-#exitBtn {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 30px;
-  cursor: pointer;
-  color: #ff4444;
-  background: none;
-  border: none;
-}
-
-canvas {
-  display: none;
-  background-color: #111;
-  border: 2px solid #00ffcc;
-}
-
-.modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #222;
-  border: 2px solid #00ffcc;
-  padding: 20px;
-  text-align: center;
-  display: none;
-  color: white;
-  border-radius: 10px;
-}
-
-.modal button {
-  margin: 10px;
-  padding: 10px 20px;
-  background-color: #111;
-  color: #00ffcc;
-  border: 2px solid #00ffcc;
-  border-radius: 5px;
-}
-
-.modal button:hover {
-  background-color: #00ffcc;
-  color: black;
-}
-</style>
-</head>
-<body>
-<button id="startBtn">START</button>
-<button id="exitBtn">❌</button>
-<canvas id="game" width="400" height="400"></canvas>
-
-<div id="gameOverModal" class="modal">
-  <p>💀 Game Over</p>
-  <button id="restartBtn">Recommencer</button>
-</div>
-
-<script>
-const startBtn = document.getElementById("startBtn");
-const exitBtn = document.getElementById("exitBtn");
-const restartBtn = document.getElementById("restartBtn");
-const gameOverModal = document.getElementById("gameOverModal");
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-const box = 20;
-let snake, direction, nextDirection, food, score, gameInterval;
+const tileSize = 32;
+const tileset = new Image();
+tileset.src = "snake-assets/tileset.png"; // place ton PNG ici
 
-function initGame() {
-  snake = [{x: 9 * box, y: 10 * box}];
-  direction = null;
-  nextDirection = null;
-  score = 0;
-  generateFood();
-  clearInterval(gameInterval);
-  gameInterval = setInterval(draw, 100);
+const width = canvas.width / tileSize;
+const height = canvas.height / tileSize;
+
+let snake = [{x: 10, y: 10}];
+let direction = "RIGHT";
+let nextDirection = "RIGHT";
+let food = spawnFood();
+let gameInterval;
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowUp" || e.key === "z") if (direction !== "DOWN") nextDirection = "UP";
+  if (e.key === "ArrowDown" || e.key === "s") if (direction !== "UP") nextDirection = "DOWN";
+  if (e.key === "ArrowLeft" || e.key === "q") if (direction !== "RIGHT") nextDirection = "LEFT";
+  if (e.key === "ArrowRight" || e.key === "d") if (direction !== "LEFT") nextDirection = "RIGHT";
+});
+
+tileset.onload = () => {
+  gameInterval = setInterval(update, 150);
+};
+
+function spawnFood() {
+  let x = Math.floor(Math.random() * width);
+  let y = Math.floor(Math.random() * height);
+  // évite la nourriture sur le snake
+  while (snake.some(s => s.x === x && s.y === y)) {
+    x = Math.floor(Math.random() * width);
+    y = Math.floor(Math.random() * height);
+  }
+  return {x, y};
 }
 
-function generateFood() {
-  food = {
-    x: Math.floor(Math.random() * 19 + 1) * box,
-    y: Math.floor(Math.random() * 19 + 1) * box
-  };
-}
+function update() {
+  direction = nextDirection;
+  let head = {...snake[0]};
 
-function draw() {
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, 400, 400);
+  if (direction === "UP") head.y--;
+  if (direction === "DOWN") head.y++;
+  if (direction === "LEFT") head.x--;
+  if (direction === "RIGHT") head.x++;
 
-  for (let i = 0; i < snake.length; i++) {
-    ctx.fillStyle = i === 0 ? "#0F0" : "#6F6";
-    ctx.fillRect(snake[i].x, snake[i].y, box, box);
-  }
+  // collision murs
+  if (head.x < 0 || head.x >= width || head.y < 0 || head.y >= height) return gameOver();
+  // collision snake
+  if (snake.some(s => s.x === head.x && s.y === head.y)) return gameOver();
 
-  ctx.fillStyle = "#F00";
-  ctx.fillRect(food.x, food.y, box, box);
+  snake.unshift(head);
 
-  ctx.fillStyle = "white";
-  ctx.font = "20px Arial";
-  ctx.fillText("Score: " + score, 10, 390);
-
-  if (nextDirection) direction = nextDirection;
-
-  if (!direction) return;
-
-  let headX = snake[0].x;
-  let headY = snake[0].y;
-
-  if (direction === "LEFT") headX -= box;
-  if (direction === "UP") headY -= box;
-  if (direction === "RIGHT") headX += box;
-  if (direction === "DOWN") headY += box;
-
-  if (headX < 0 || headY < 0 || headX >= 400 || headY >= 400 || collision({x: headX, y: headY}, snake)) {
-    gameOver();
-    return;
-  }
-
-  const newHead = {x: headX, y: headY};
-
-  if (headX === food.x && headY === food.y) {
-    score++;
-    generateFood();
+  // manger la nourriture
+  if (head.x === food.x && head.y === food.y) {
+    food = spawnFood();
   } else {
     snake.pop();
   }
 
-  snake.unshift(newHead);
-}
-
-function collision(head, array) {
-  return array.some(s => s.x === head.x && s.y === head.y);
+  draw();
 }
 
 function gameOver() {
   clearInterval(gameInterval);
-  gameOverModal.style.display = "block";
+  alert("💥 Game Over!");
+  snake = [{x: 10, y: 10}];
+  direction = "RIGHT";
+  nextDirection = "RIGHT";
+  food = spawnFood();
+  gameInterval = setInterval(update, 150);
 }
 
-function hideModals() {
-  gameOverModal.style.display = "none";
+function draw() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // dessiner nourriture
+  ctx.drawImage(
+    tileset,
+    tileSize*8, 0, tileSize, tileSize, // nourriture
+    food.x*tileSize, food.y*tileSize, tileSize, tileSize
+  );
+
+  // dessiner snake
+  snake.forEach((segment, i) => {
+    let sx = 0, sy = 0;
+
+    if (i === 0) { // tête
+      if (direction === "UP") sx = tileSize*0;
+      if (direction === "DOWN") sx = tileSize*1;
+      if (direction === "LEFT") sx = tileSize*2;
+      if (direction === "RIGHT") sx = tileSize*3;
+    } else if (i === snake.length-1) { // queue
+      sx = tileSize*7;
+    } else { // corps
+      if (snake[i-1].x === segment.x) sx = tileSize*4; // vertical
+      else sx = tileSize*5; // horizontal
+    }
+
+    ctx.drawImage(
+      tileset,
+      sx, sy, tileSize, tileSize,
+      segment.x*tileSize, segment.y*tileSize, tileSize, tileSize
+    );
+  });
 }
-
-startBtn.addEventListener("click", () => {
-  startBtn.style.display = "none";
-  canvas.style.display = "block";
-  hideModals();
-  initGame();
-});
-
-restartBtn.addEventListener("click", () => {
-  hideModals();
-  initGame();
-});
-
-exitBtn.addEventListener("click", () => {
-  window.parent.document.getElementById("game-frame").src = "";
-});
-
-document.addEventListener("keydown", e => {
-  if (e.key === "w" && direction !== "DOWN") nextDirection = "UP";
-  if (e.key === "s" && direction !== "UP") nextDirection = "DOWN";
-  if (e.key === "a" && direction !== "RIGHT") nextDirection = "LEFT";
-  if (e.key === "d" && direction !== "LEFT") nextDirection = "RIGHT";
-});
-</script>
-</body>
-</html>
