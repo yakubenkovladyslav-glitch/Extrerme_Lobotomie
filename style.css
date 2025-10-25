@@ -1,59 +1,13 @@
 body {
-  background-color: black;
-  color: white;
   margin: 0;
-  font-family: Arial, sans-serif;
-}
-
-.container {
-  display: flex;
-  height: 100vh;
-}
-
-/* Menu à gauche */
-.menu {
-  width: 200px;
-  background-color: #111;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.menu h1 {
-  color: #00ff99;
-  margin-bottom: 20px;
-}
-
-.menu button {
-  padding: 10px 20px;
-  font-size: 18px;
-  cursor: pointer;
-  background-color: #222;
-  color: #00ffcc;
-  border: 2px solid #00ffcc;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-.menu button:hover {
-  background-color: #00ffcc;
-  color: black;
-}
-
-/* Zone du jeu à droite */
-#game-container {
-  flex-grow: 1;
+  background: #000;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  font-family: Consolas, monospace;
 }
 
-#game-frame {
-  width: 80%;
-  height: 80%;
-  border: 2px solid #00ffcc;
-  border-radius: 5px;
-  background-color: black;
+canvas {
+  border: 2px solid #00ff99;
 }

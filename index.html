@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snake Texturé</title>
-<style>
-  body {background:black; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
-  canvas {border:2px solid #00ffcc;}
-</style>
+  <meta charset="UTF-8">
+  <title>Snake Game</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas {
+      border: 2px solid #00ff99;
+    }
+  </style>
 </head>
 <body>
-<canvas id="game" width="640" height="640"></canvas>
-<script src="snake.js"></script>
+  <!-- Canvas pour le jeu -->
+  <canvas id="game" width="640" height="480"></canvas>
+
+  <!-- Inclusion du JS -->
+  <script src="snake.js"></script>
 </body>
 </html>
