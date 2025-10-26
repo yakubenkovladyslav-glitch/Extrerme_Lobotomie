@@ -1,112 +1,130 @@
-// Variables du jeu
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+// games/flappy-bird/game.js
+const bird = document.getElementById('bird');
+const birdStyle = bird.style;
+const gameScreen = document.querySelector('.game-screen');
 
-// Dimensions
-const birdWidth = 30;
-const birdHeight = 30;
-let birdY = canvas.height / 2 - birdHeight / 2;
-let birdVelocity = 0;
-const gravity = 0.5;
-const lift = -10;
-const pipeWidth = 50;
-const pipeGap = 150;
-let pipes = [];
+let birdPositionY = 150;
+let birdVelocity = 10; // Vitesse verticale de l'oiseau
+const gravity = 0.5;  // Gravité
+const jumpPower = 1; // Puissance du saut
+let isJumping = false;
+
+// Position de l'oiseau
+birdStyle.top = `${birdPositionY}px`;
+
+let obstacles = [];
 let score = 0;
+const obstacleWidth = 50;
+const obstacleGap = 150; // Espacement entre les obstacles (hauteur du gap)
 
-// Images
-const birdImage = new Image();
-birdImage.src = "assets/bird.png"; // Remplace avec l'image de ton oiseau
-const pipeImage = new Image();
-pipeImage.src = "assets/pipe.png"; // Remplace avec l'image de ton tuyau
-
-// Événements
-document.addEventListener("keydown", () => {
-    birdVelocity = lift;  // Lorsque l'utilisateur appuie sur une touche, l'oiseau s'élève
+document.addEventListener('keydown', function (event) {
+  if (event.code === 'Space' && !isJumping) {
+    jumpBird();
+  }
 });
 
-// Création des tuyaux
-function createPipe() {
-    const pipeHeight = Math.floor(Math.random() * (canvas.height - pipeGap));
-    pipes.push({
-        x: canvas.width,
-        top: pipeHeight,
-        bottom: pipeHeight + pipeGap
-    });
+function jumpBird() {
+  birdVelocity = jumpPower;
+  isJumping = true;
 }
 
-// Mise à jour du jeu
-function updateGame() {
-    // Déplacer les tuyaux
-    pipes.forEach(pipe => {
-        pipe.x -= 2;  // Les tuyaux se déplacent de 2 pixels par frame
-    });
+// Déplacer l'oiseau en fonction de la gravité et des sauts
+function moveBird() {
+  birdVelocity += gravity;
+  birdPositionY += birdVelocity;
+  birdStyle.top = `${birdPositionY}px`;
 
-    // Ajouter des tuyaux si nécessaire
-    if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
-        createPipe();
+  // Empêcher l'oiseau de sortir de l'écran (le sol et le plafond)
+  if (birdPositionY < 0) {
+    birdPositionY = 0;
+    birdVelocity = 0;
+  }
+
+  if (birdPositionY > 400) {
+    birdPositionY = 400;
+    birdVelocity = 0;
+  }
+}
+
+// Créer des obstacles
+function createObstacle() {
+  const obstacleHeight = Math.floor(Math.random() * (300 - 100) + 100); // Hauteur aléatoire
+  const obstacleBottomHeight = 500 - obstacleHeight - obstacleGap; // La partie basse des tours
+
+  // Créer les tours (haut et bas)
+  const topObstacle = document.createElement('div');
+  topObstacle.classList.add('obstacle', 'top');
+  topObstacle.style.height = `${obstacleHeight}px`;
+  topObstacle.style.left = '100%'; // Démarre à droite de l'écran
+
+  const bottomObstacle = document.createElement('div');
+  bottomObstacle.classList.add('obstacle', 'bottom');
+  bottomObstacle.style.height = `${obstacleBottomHeight}px`;
+  bottomObstacle.style.left = '100%';
+
+  gameScreen.appendChild(topObstacle);
+  gameScreen.appendChild(bottomObstacle);
+
+  obstacles.push({ top: topObstacle, bottom: bottomObstacle, passed: false });
+}
+
+// Déplacer les obstacles
+function moveObstacles() {
+  obstacles.forEach((obstacle, index) => {
+    let obstaclePositionX = parseInt(obstacle.top.style.left);
+
+    // Déplace les obstacles de droite à gauche
+    obstaclePositionX -= 2;
+    obstacle.top.style.left = `${obstaclePositionX}px`;
+    obstacle.bottom.style.left = `${obstaclePositionX}px`;
+
+    // Vérifie si l'obstacle est sorti de l'écran
+    if (obstaclePositionX < -obstacleWidth) {
+      gameScreen.removeChild(obstacle.top);
+      gameScreen.removeChild(obstacle.bottom);
+      obstacles.splice(index, 1);
+      if (!obstacle.passed) {
+        score++;
+      }
     }
 
-    // Vérifier les collisions avec les tuyaux ou les bords du canvas
-    pipes.forEach(pipe => {
-        if (
-            birdY < pipe.top || birdY + birdHeight > pipe.bottom ||  // Si l'oiseau touche un tuyau
-            birdY < 0 || birdY + birdHeight > canvas.height          // Si l'oiseau sort du canvas
-        ) {
-            resetGame();
-        }
-    });
+    // Vérifier la collision entre l'oiseau et les obstacles
+    if (
+      parseInt(obstacle.top.style.left) < 60 &&
+      parseInt(obstacle.top.style.left) > 10 &&
+      (birdPositionY < parseInt(obstacle.height) || birdPositionY > 500 - parseInt(obstacle.height) - obstacleGap)
+    ) {
+      // Si l'oiseau touche un obstacle, on réinitialise le jeu
+      gameOver();
+    }
 
-    // Mettre à jour la position de l'oiseau
-    birdVelocity += gravity;  // Ajouter la gravité à la vitesse de l'oiseau
-    birdY += birdVelocity;
-
-    // Supprimer les tuyaux qui sont sortis de l'écran
-    pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
-
-    // Mise à jour du score (ajouter 1 à chaque fois que l'oiseau passe un tuyau)
-    pipes.forEach(pipe => {
-        if (pipe.x + pipeWidth < 0) {
-            score++;
-        }
-    });
-
-    // Redessiner l'écran
-    drawGame();
+    // Vérifier si l'oiseau passe les obstacles sans collision
+    if (!obstacle.passed && obstaclePositionX < 60) {
+      obstacle.passed = true;
+    }
+  });
 }
 
-// Dessiner le jeu
-function drawGame() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Effacer le canvas à chaque frame
-
-    // Dessiner l'oiseau
-    ctx.drawImage(birdImage, 50, birdY, birdWidth, birdHeight);
-
-    // Dessiner les tuyaux
-    pipes.forEach(pipe => {
-        ctx.drawImage(pipeImage, pipe.x, 0, pipeWidth, pipe.top);  // Tuyau du haut
-        ctx.drawImage(pipeImage, pipe.x, pipe.bottom, pipeWidth, canvas.height - pipe.bottom);  // Tuyau du bas
-    });
-
-    // Afficher le score
-    ctx.font = "24px Arial";
-    ctx.fillStyle = "#ff1a1a";  // Néon rouge pour le score
-    ctx.fillText("Score: " + score, 10, 30);
+// Game Over (arrêt du jeu)
+function gameOver() {
+  alert("Game Over!");
+  window.location.reload(); // Recharger la page pour recommencer
 }
 
-// Réinitialiser le jeu en cas de collision
-function resetGame() {
-    birdY = canvas.height / 2 - birdHeight / 2;
-    birdVelocity = 0;
-    pipes = [];
-    score = 0;
+// Afficher le score
+function updateScore() {
+  const scoreElement = document.getElementById('score');
+  scoreElement.textContent = `Score: ${score}`;
 }
 
-// Boucle de jeu
 function gameLoop() {
-    updateGame();  // Mettre à jour l'état du jeu
-    requestAnimationFrame(gameLoop);  // Appeler la fonction à la prochaine frame
+  moveBird();
+  moveObstacles();
+  updateScore();
 }
 
-// Démarrer le jeu
-gameLoop();
+// Créer un obstacle toutes les 2 secondes
+setInterval(createObstacle, 2000);
+
+// Exécuter la logique du jeu à intervalles réguliers
+setInterval(gameLoop, 20);

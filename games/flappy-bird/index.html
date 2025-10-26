@@ -1,15 +1,22 @@
+<!-- games/flappy-bird/index.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flappy Bird</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
-        <canvas id="gameCanvas" width="320" height="480"></canvas>
+  <div class="game-container">
+    <h1>Flappy Bird</h1>
+    <div id="score">Score: 0</div> <!-- Affichage du score -->
+    <div class="game-screen">
+      <img id="bird" src="assets/bird.png" alt="Bird">
     </div>
-    <script src="script.js"></script>
+    <button onclick="window.location.href='../../jeux.html'">Retour aux jeux</button>
+  </div>
+
+  <script src="game.js"></script>
 </body>
 </html>
