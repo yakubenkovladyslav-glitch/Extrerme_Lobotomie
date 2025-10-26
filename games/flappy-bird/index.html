@@ -3,64 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Flappy Sushi</title>
-  <style>
-    body {
-      background-color: #222;
-      margin: 0;
-      overflow: hidden;
-    }
-    #scoreDisplay {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 24px;
-      font-family: Arial;
-      color: white;
-      z-index: 10;
-      display: none;
-    }
-    #gameOverUI {
-      position: absolute;
-      top: 200px;
-      left: 50px;
-      text-align: center;
-      z-index: 20;
-      display: none;
-    }
-    #gameOverUI h1 {
-      color: white;
-      font-size: 40px;
-      margin-bottom: 20px;
-    }
-    #gameOverUI img {
-      width: 150px;
-      margin: 10px;
-      cursor: pointer;
-    }
-    #mainMenu {
-      position: absolute;
-      top: 150px;
-      left: 50px;
-      text-align: center;
-      z-index: 30;
-    }
-    #mainMenu img {
-      width: 150px;
-      margin: 10px;
-      cursor: pointer;
-    }
-    canvas {
-      display: block;
-      margin: 0 auto;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="mainMenu">
     <h1 style="color: white;">Flappy Sushi</h1>
-    <img id="playBtn" src="assets/jouer.png">
-    <img id="skinsBtn" src="assets/skins.png">
-    <img id="exitBtn" src="assets/quitter.png">
+    <img id="playBtn" src="assets/jouer.png" alt="Jouer">
+    <img id="skinsBtn" src="assets/skins.png" alt="Skins">
+    <img id="exitBtn" src="assets/quitter.png" alt="Quitter">
   </div>
 
   <div id="scoreDisplay">Score : 0</div>
@@ -68,10 +18,19 @@
 
   <div id="gameOverUI">
     <h1>Womp Womp</h1>
-    <img id="restartBtn" src="assets/recommencer.png">
-    <img id="quitBtn" src="assets/quitter.png">
+    <img id="restartBtn" src="assets/recommencer.png" alt="Recommencer">
+    <img id="quitBtn" src="assets/quitter.png" alt="Quitter">
   </div>
 
-  <script src="game.js"></script>
+  <!-- Modal Skins -->
+  <div id="skinsModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-labelledby="skinsTitle">
+      <h2 id="skinsTitle">Choisir un skin</h2>
+      <div id="skinsList" class="skins-list"></div>
+      <button id="closeSkins">Fermer</button>
+    </div>
+  </div>
+
+  <script src="game.js" defer></script>
 </body>
 </html>
