@@ -1,49 +1,14 @@
-/* Style général du site */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    background-color: #0a0a0a;  /* Fond noir */
-    color: #ff1a1a;             /* Néon rouge */
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    text-align: center;
-    flex-direction: column;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 20px;
 }
 
-h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    text-shadow: 0 0 10px rgba(255, 26, 26, 1);
-}
-
-a {
-    color: #ff1a1a;
-    text-decoration: none;
-    font-size: 24px;
-    margin: 15px;
-    text-shadow: 0 0 10px rgba(255, 26, 26, 1);
-    transition: all 0.3s ease;
-}
-
-a:hover {
-    color: #fff;
-    text-shadow: 0 0 20px rgba(255, 26, 26, 1);
-}
-
-.menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.container {
-    max-width: 900px;
-    width: 100%;
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 16px;
+  cursor: pointer;
 }

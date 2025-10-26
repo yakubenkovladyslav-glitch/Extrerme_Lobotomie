@@ -1,59 +1,8 @@
-/* games/flappy-bird/style.css */
 body {
+  margin: 0;
   background-color: #000;
-  color: #fff;
-  font-family: Arial, sans-serif;
-}
-
-.game-container {
-  text-align: center;
-}
-
-.game-screen {
-  position: relative;
-  height: 500px;
-  background-image: url('assets/bg.png');
-  background-size: cover;
-  margin: 0 auto;
-  width: 100%;
-}
-
-#bird {
-  position: absolute;
-  width: 50px;
-  transition: transform 0.1s ease-in-out;
-}
-
-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #FF5733;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #FF1C00;
-}
-
-#score {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 24px;
-}
-
-.obstacle {
-  position: absolute;
-  background-color: #FF5733;
-}
-
-.top {
-  top: 0;
-}
-
-.bottom {
-  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
