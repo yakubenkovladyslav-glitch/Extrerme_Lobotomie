@@ -2,11 +2,76 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Flappy Bird</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Flappy Sushi</title>
+  <style>
+    body {
+      background-color: #222;
+      margin: 0;
+      overflow: hidden;
+    }
+    #scoreDisplay {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      font-family: Arial;
+      color: white;
+      z-index: 10;
+      display: none;
+    }
+    #gameOverUI {
+      position: absolute;
+      top: 200px;
+      left: 50px;
+      text-align: center;
+      z-index: 20;
+      display: none;
+    }
+    #gameOverUI h1 {
+      color: white;
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+    #gameOverUI img {
+      width: 150px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    #mainMenu {
+      position: absolute;
+      top: 150px;
+      left: 50px;
+      text-align: center;
+      z-index: 30;
+    }
+    #mainMenu img {
+      width: 150px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
+  <div id="mainMenu">
+    <h1 style="color: white;">Flappy Sushi</h1>
+    <img id="playBtn" src="assets/jouer.png">
+    <img id="skinsBtn" src="assets/skins.png">
+    <img id="exitBtn" src="assets/quitter.png">
+  </div>
+
+  <div id="scoreDisplay">Score : 0</div>
   <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+  <div id="gameOverUI">
+    <h1>Womp Womp</h1>
+    <img id="restartBtn" src="assets/recommencer.png">
+    <img id="quitBtn" src="assets/quitter.png">
+  </div>
+
   <script src="game.js"></script>
 </body>
 </html>
